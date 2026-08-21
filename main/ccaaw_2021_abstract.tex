@@ -1,0 +1,47 @@
+\documentclass[conference,onecolumn]{IEEEtran}\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{xfrac}
+\usepackage{mathtools}
+  \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\usepackage{float}
+\usepackage{bm}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{
+A Spectrum Sensor for CubeSat Radios
+}
+
+
+\author{
+\IEEEauthorblockN{Dylan J. Gormley, and Anthony A. Stock}
+\IEEEauthorblockA{\textit{Cognitive Signal Processing Branch} \\
+\textit{NASA Glenn Research Center}\\
+Cleveland, OH, USA \\
+\{dylan.j.gormley, and anthony.stock\}@nasa.gov}
+}
+
+\IEEEpubid{U.S. government work not protected under U.S. copyright law.}
+
+\maketitle
+
+\begin{abstract}
+Cube satellite (CubeSat) launches have increased exponentially over the last 20 years.  This class of miniature spacecraft is well-suited for a set of nonconventional satellite architectures collectively known as formation flying.  With the exponential pace of launches expected to continue, the prospect of spectrum management for these complex formations arises.  In previous work, investigators focus on terrestrial applications of spectrum sensing, which have the luxury to utilize hardware with high size, weight, and power (SWaP) resources.  In this work, we develop and test a spectrum sensor for CubeSat radio applications.
+
+Given that CubeSat radios are inherently designed for low SWaP, they cannot implement the computationally expensive spectral correlation analyzer (SCA) algorithms for signal detection.  To that end, our investigation focuses on the application of the SCA to square-root-raised-cosine (SRRC) pulse-shaped quadrature amplitude modulation (QAM) waveforms using a field-programmable gate array (FPGA).  This model requires no prior knowledge of the radio-frequency (RF) channel.  We show that this model can consistently and accurately detect the symbol rate and center frequencies of waveforms located in a spectrum.
+\end{abstract}
+
+\begin{IEEEkeywords}
+cubesat, spectrum sensing, spectral correlation analyzer, fpga 
+\end{IEEEkeywords}
+
+\end{document}
+

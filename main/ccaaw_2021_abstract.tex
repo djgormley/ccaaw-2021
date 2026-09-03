@@ -3,6 +3,14 @@
 
 \usepackage{amsmath}
 
+\pdfinfo{
+  /Title (A Spectrum Sensor for CubeSat Radios - Revised Abstract)
+  /Author (Dylan J. Gormley and Anthony A. Stock)
+  /Subject (Post-publication fact-checked abstract revision, September 2026)
+  /Keywords (CubeSat; spectrum sensing; spectral correlation analyzer; field-programmable gate array)
+}
+\pdfcatalog{/Lang (en-US)}
+
 \begin{document}
 
 \title{A Spectrum Sensor for CubeSat Radios%
@@ -19,11 +27,11 @@ dylan.j.gormley@nasa.gov; anthony.stock@nasa.gov}
 \maketitle
 
 \begin{abstract}
-Small-spacecraft missions increasingly use distributed architectures, making awareness of shared radio-frequency spectrum useful for interference mitigation and spectrum sharing. Conventional spectral-correlation analyzers (SCAs), however, can demand more memory and computation than some CubeSat radios can readily provide. This paper develops an FPGA-oriented spectrum sensor based on a low-memory streaming SCA. Under the evaluated signal model, the sensor searches configured symbol-rate and center-frequency candidates for power-of-two-order quadrature amplitude modulation waveforms with square-root-raised-cosine pulse shaping. A power-normalized binary threshold determines whether each candidate symbol rate is present; a center-frequency detector retains the strongest frequency candidate, and FIFO-based scheduling coordinates parallel detector instances. Monte Carlo simulations with two co-channel signals were used to characterize the detector. Across the nine reported scenarios, the symbol-rate detection proportion ranged from 0.89 to 1.0, while the false-alarm proportion per unoccupied symbol-rate candidate ranged from 0.0013 to 0.1213. These metrics assess symbol-rate detection only: the archived scoring code does not test center-frequency correctness. Separate center-frequency samples appeared more dispersed as nominal $E_b/N_0$ decreased. The results support feasibility within the simulated QAM--SRRC conditions, but they do not establish general channel independence, hardware performance, or center-frequency accuracy. The archive contains no synthesizable hardware implementation, resource report, timing closure, or power measurement.
+Small-spacecraft missions increasingly use distributed architectures, making awareness of shared radio-frequency spectrum useful for interference mitigation and spectrum sharing. Conventional spectral-correlation analyzers, however, can demand more memory and computation than some CubeSat radios can readily provide. This paper develops a low-memory spectrum sensor for field-programmable gate arrays based on a streaming spectral-correlation analyzer. Under the evaluated signal model, the sensor searches configured symbol-rate and center-frequency candidates for power-of-two-order quadrature amplitude modulation waveforms with square-root-raised-cosine pulse shaping. A power-normalized binary threshold nominates symbol-rate candidates; a center-frequency detector retains the strongest frequency candidate, and a proposed scheduler coordinates parallel detector instances. Monte Carlo simulations with two co-channel signals were used to characterize the detector. Across the nine reported scenarios, the symbol-rate detection proportion ranged from 0.89 to 1.0, while the false-alarm proportion per unoccupied symbol-rate candidate ranged from 0.0013 to 0.1213. These metrics assess symbol-rate detection only: the archived scoring code does not test center-frequency correctness. Separate returned center-frequency estimates appeared more dispersed as the nominal energy-per-bit-to-noise-density setting decreased. The results support feasibility within the simulated signal conditions, but they do not establish general channel independence, hardware performance, or center-frequency accuracy. A mixed-date engineering archive contains later register-transfer-level source and partial on-device traces, but not an exact reproducible 2021 build or implementation reports.
 \end{abstract}
 
 \begin{IEEEkeywords}
-CubeSat, spectrum sensing, spectral correlation analyzer, FPGA
+CubeSat, spectrum sensing, spectral correlation analyzer, field-programmable gate array
 \end{IEEEkeywords}
 
 \end{document}

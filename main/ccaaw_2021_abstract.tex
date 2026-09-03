@@ -1,47 +1,29 @@
-\documentclass[conference,onecolumn]{IEEEtran}\IEEEoverridecommandlockouts
-\usepackage{cite}
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
-\usepackage{graphicx}
-\usepackage{textcomp}
-\usepackage{xcolor}
-\usepackage{xfrac}
-\usepackage{mathtools}
-  \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
-\usepackage{float}
-\usepackage{bm}
+\documentclass[conference,onecolumn]{IEEEtran}
+\IEEEoverridecommandlockouts
 
-\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\usepackage{amsmath}
 
 \begin{document}
 
-\title{
-A Spectrum Sensor for CubeSat Radios
-}
-
+\title{A Spectrum Sensor for CubeSat Radios%
+\thanks{Post-publication fact-checked wording, September 2026; not the original 2021 abstract submission.}}
 
 \author{
-\IEEEauthorblockN{Dylan J. Gormley, and Anthony A. Stock}
+\IEEEauthorblockN{Dylan J. Gormley and Anthony A. Stock}
 \IEEEauthorblockA{\textit{Cognitive Signal Processing Branch} \\
 \textit{NASA Glenn Research Center}\\
 Cleveland, OH, USA \\
-\{dylan.j.gormley, and anthony.stock\}@nasa.gov}
+dylan.j.gormley@nasa.gov; anthony.stock@nasa.gov}
 }
-
-\IEEEpubid{U.S. government work not protected under U.S. copyright law.}
 
 \maketitle
 
 \begin{abstract}
-Cube satellite (CubeSat) launches have increased exponentially over the last 20 years.  This class of miniature spacecraft is well-suited for a set of nonconventional satellite architectures collectively known as formation flying.  With the exponential pace of launches expected to continue, the prospect of spectrum management for these complex formations arises.  In previous work, investigators focus on terrestrial applications of spectrum sensing, which have the luxury to utilize hardware with high size, weight, and power (SWaP) resources.  In this work, we develop and test a spectrum sensor for CubeSat radio applications.
-
-Given that CubeSat radios are inherently designed for low SWaP, they cannot implement the computationally expensive spectral correlation analyzer (SCA) algorithms for signal detection.  To that end, our investigation focuses on the application of the SCA to square-root-raised-cosine (SRRC) pulse-shaped quadrature amplitude modulation (QAM) waveforms using a field-programmable gate array (FPGA).  This model requires no prior knowledge of the radio-frequency (RF) channel.  We show that this model can consistently and accurately detect the symbol rate and center frequencies of waveforms located in a spectrum.
+Small-spacecraft missions increasingly use distributed architectures, making awareness of shared radio-frequency spectrum useful for interference mitigation and spectrum sharing. Conventional spectral-correlation analyzers (SCAs), however, can demand more memory and computation than some CubeSat radios can readily provide. This paper develops an FPGA-oriented spectrum sensor based on a low-memory streaming SCA. Under the evaluated signal model, the sensor searches configured symbol-rate and center-frequency candidates for power-of-two-order quadrature amplitude modulation waveforms with square-root-raised-cosine pulse shaping. A power-normalized binary threshold determines whether each candidate symbol rate is present; a center-frequency detector retains the strongest frequency candidate, and FIFO-based scheduling coordinates parallel detector instances. Monte Carlo simulations with two co-channel signals were used to characterize the detector. Across the nine reported scenarios, the symbol-rate detection proportion ranged from 0.89 to 1.0, while the false-alarm proportion per unoccupied symbol-rate candidate ranged from 0.0013 to 0.1213. These metrics assess symbol-rate detection only: the archived scoring code does not test center-frequency correctness. Separate center-frequency samples appeared more dispersed as nominal $E_b/N_0$ decreased. The results support feasibility within the simulated QAM--SRRC conditions, but they do not establish general channel independence, hardware performance, or center-frequency accuracy. The archive contains no synthesizable hardware implementation, resource report, timing closure, or power measurement.
 \end{abstract}
 
 \begin{IEEEkeywords}
-cubesat, spectrum sensing, spectral correlation analyzer, fpga 
+CubeSat, spectrum sensing, spectral correlation analyzer, FPGA
 \end{IEEEkeywords}
 
 \end{document}
-

@@ -53,7 +53,7 @@ Over the last two decades, cube satellite (CubeSat) launches have increased expo
 
 \begin{figure}[t]
 \center
-\includegraphics[width=0.49\textwidth]{../images/Nanosats_total_2021-04-04.png}
+\includegraphics[width=\columnwidth]{images/Nanosats_total_2021-04-04.png}
 \caption{Running total (cumulative sum) of launched nanosatellites and CubeSats \cite{kulu-21}.}
 \label{fig:running_total}
 \end{figure}
@@ -61,22 +61,22 @@ Over the last two decades, cube satellite (CubeSat) launches have increased expo
 \begin{figure}[p]
 \center
 
-\includegraphics[width=0.49\textwidth]{../images/explorers.png} 
+\includegraphics[width=\columnwidth]{images/explorers.png}
 \caption{Starling-Explorers provide coordinated flight and communication with sensors such as ground penetrating radar or magnetometers \cite{bennett-18}.} 
 \label{fig:explorers}
 \bigskip
 
-\includegraphics[width=0.49\textwidth]{../images/dsg.png} 
+\includegraphics[width=\columnwidth]{images/dsg.png}
 \caption{Starling-DSG sensors provide visual inspection and monitoring for Deep Space Gateway (DSG) operations \cite{bennett-18}.} 
 \label{fig:dsg}
 \bigskip
 
-\includegraphics[width=0.49\textwidth]{../images/lunarnet.png} 
+\includegraphics[width=\columnwidth]{images/lunarnet.png}
 \caption{Starling-LunarNet provides constant monitoring of lunar surface activity by providing an ad hoc mesh network in low Earth orbit (LEO) \cite{bennett-18}.} 
 \label{fig:lunarnet}
 \bigskip
 
-\includegraphics[width=0.49\textwidth]{../images/solarwind.png} 
+\includegraphics[width=\columnwidth]{images/solarwind.png}
 \caption{Starling-SolarWind in L1 halo orbit autonomously performs radio tomography and in-site measurements to monitor and characterize solar wind \cite{bennett-18}.} 
 \label{fig:solarwind}
 
@@ -128,7 +128,7 @@ $1$ & $2^{12}$ & $1.0MHz$ & $0.2MBd$ & $0.2MHz$ & $32$ & $0.2$ & $3.0dB$ \\
 
 \begin{figure}[H]
 \center
-\includegraphics[width=0.49\textwidth]{../images/roc.png}
+\includegraphics[width=\columnwidth]{images/roc.png}
 \caption{ROC curve of a noisy channel (see Table 1) in a model of (\ref{eq:sca_test}) to predict performance given various values of $\beta$.  Parameters used for curve generation were: confidence level of $95\%$, $\beta$ range of $1.0\times10^{-6}$ to $1.0\times10^{-3}$ in steps of $1.0\times10^{-6}$, and the average of $300$ trials per point.  The optimal operating point  (red) is calculated using (\ref{eq:J}).  Here, $J$ is found to be $(0.64167,0.47167)$ which was produced using a $\beta$ of $1.23\times10^{-4}$.} 
 \label{fig:roc}
 \end{figure}
@@ -151,7 +151,7 @@ We begin the discussion of our streaming-SCA additions with the threshold.  The 
 
 \begin{figure}[H]
 \center
-\includegraphics[width=0.49\textwidth]{../images/Threshold.png}
+\includegraphics[width=\columnwidth]{images/Threshold.png}
 \caption{Block diagram of the threshold module.}
 \label{fig:threshold}
 \end{figure}
@@ -163,7 +163,7 @@ The digital design operates by receiving a $v$ and an $FCW$ step size, determine
 
 \begin{figure}[H]
 \center
-\includegraphics[width=0.49\textwidth]{../images/CFD.png}
+\includegraphics[width=\columnwidth]{images/CFD.png}
 \caption{Block diagram of the center frequency detector module.}
 \label{fig:cfd}
 \end{figure}
@@ -175,7 +175,7 @@ Because the CFD scheduling process can only assign one candidate $k$ at a time, 
 
 \begin{figure}[H]
 \center
-\includegraphics[width=0.49\textwidth]{../images/SCA.png}
+\includegraphics[width=\columnwidth]{images/SCA.png}
 \caption{Block diagram of the spectrum sensor module.}
 \label{fig:sca}
 \end{figure}
@@ -224,7 +224,7 @@ Depending on properties of the received waveform, such as $\sfrac{E_{\mathlarger
 
 \begin{figure}[H]
 \center
-\includegraphics[width=0.49\textwidth]{../images/EbN0_fc_histo.png}
+\includegraphics[width=\columnwidth]{images/EbN0_fc_histo.png}
 \caption{A bivariate histogram depicting the probability density functions (PDF) of center frequency detection for several values of $\sfrac{E_{\mathlarger{b}}}{N_{\mathlarger{0}}}$. For a received waveform with little impairment, in this case noise, the variance of detected center frequencies is smaller. Conversely, the detected center frequency is more likely to vary from the true center frequency of the received signal when the received waveform is impaired.}
 \label{fig:histo}
 \end{figure}
@@ -236,7 +236,7 @@ After some processing time, the results corresponding to $A1$ and $A2$ are pushe
 
 \begin{figure}[H]
 \center
-\includegraphics[width=0.49\textwidth]{../images/SCA_input.png}
+\includegraphics[width=\columnwidth]{images/SCA_input.png}
 \caption{Timing diagram depicting the process of pushing $v$ candidates to the input FIFO.}
 \label{fig:timing_in}
 \end{figure}
@@ -245,7 +245,7 @@ In the output of the spectrum sensor module (see Fig. \ref{fig:timing_in}), we a
 
 \begin{figure}[H]
 \center
-\includegraphics[width=0.49\textwidth]{../images/SCA_output.png}
+\includegraphics[width=\columnwidth]{images/SCA_output.png}
 \caption{Spectrum sensor timing diagram, continued. In the event that the result FIFO is full, older results are discarded to prioritize more recent values.}
 \label{fig:timing_out}
 \end{figure}
@@ -260,8 +260,8 @@ With the addition of a scheduling algorithm and data structures, various instanc
 \section*{Acknowledgment}
 The authors would like to thank Erica K. Henrichsen for the graphic designs illustrated in this paper.
 
-\bibliographystyle{./IEEEtran}
-\bibliography{./IEEEabrv.bib, ./ccaaw_2021.bib} 
+\bibliographystyle{main/IEEEtran}
+\bibliography{main/IEEEabrv,main/ccaaw_2021}
 
 \end{document}
 

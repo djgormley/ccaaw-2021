@@ -1,1 +1,11 @@
 /tmp/
+/ccaaw2021_grc22.pdf
+/ccaaw2021_nf1864.pdf
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz

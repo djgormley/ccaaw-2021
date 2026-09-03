@@ -31,7 +31,7 @@ dylan.j.gormley@nasa.gov; anthony.stock@nasa.gov}
 \maketitle
 
 \begin{abstract}
-Small-spacecraft missions increasingly use distributed architectures, making awareness of shared radio-frequency spectrum useful for interference mitigation and spectrum sharing. Conventional spectral-correlation analyzers, however, can demand more memory and computation than some CubeSat radios can readily provide. This paper develops a low-memory spectrum sensor for field-programmable gate arrays based on a streaming spectral-correlation analyzer. Under the evaluated signal model, the sensor searches configured symbol-rate and center-frequency candidates for power-of-two-order quadrature amplitude modulation waveforms with square-root-raised-cosine pulse shaping. A power-normalized binary threshold nominates symbol-rate candidates; a center-frequency detector retains the strongest frequency candidate, and a proposed scheduler coordinates parallel detector instances. Monte Carlo simulations with two co-channel signals were used to characterize the detector. Across the nine reported scenarios, the symbol-rate detection proportion ranged from 0.89 to 1.0, while the false-alarm proportion per unoccupied symbol-rate candidate ranged from 0.0013 to 0.1213. These metrics assess symbol-rate detection only: the archived scoring code does not test center-frequency correctness. Separate returned center-frequency estimates appeared more dispersed as the nominal energy-per-bit-to-noise-density setting decreased. The results support feasibility within the simulated signal conditions, but they do not establish general channel independence, hardware performance, or center-frequency accuracy.
+Small-spacecraft missions increasingly use distributed architectures, making awareness of shared radio-frequency spectrum useful for interference mitigation and spectrum sharing. Conventional spectral-correlation analyzers, however, can demand more memory and computation than some CubeSat radios can readily provide. This paper develops a low-memory spectrum sensor for field-programmable gate arrays based on a streaming spectral-correlation analyzer. Under the evaluated signal model, the sensor searches configured symbol-rate and center-frequency candidates for power-of-two-order quadrature amplitude modulation waveforms with square-root-raised-cosine pulse shaping. A power-normalized binary threshold nominates symbol-rate candidates; a center-frequency detector retains the strongest frequency candidate, and a proposed scheduler coordinates parallel detector instances. Monte Carlo simulations with two spectrally overlapping signals were used to characterize the detector. Across the nine reported scenarios, the symbol-rate detection proportion ranged from 0.89 to 1.0, while the false-alarm proportion per unoccupied symbol-rate candidate ranged from 0.0013 to 0.1213. These metrics assess symbol-rate detection only: the archived scoring code does not test center-frequency correctness. Separate returned center-frequency estimates appeared more dispersed as the nominal energy-per-bit-to-noise-density setting decreased. The results support feasibility within the simulated signal conditions, but they do not establish general channel independence, hardware performance, or center-frequency accuracy.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -78,18 +78,18 @@ By April 2021, the cumulative number of launched nanosatellites and CubeSats had
 
 If such distributed architectures become more common, their inter-satellite links may face congestion and interference in shared bands. Spectrum sensing could provide measurements to future dynamic spectrum-management algorithms, but conventional cyclostationary processing can be computationally and memory intensive~\cite{koch-19}. CubeSat radios also operate under restrictive size, mass, power, and compute budgets. This motivates the low-memory streaming spectral correlation analyzer (streaming-SCA) developed in~\cite{gormley-21}.
 
-The streaming-SCA estimates selected points of the spectral correlation function (SCF) for square-root-raised-cosine (SRRC) pulse-shaped QAM waveforms. The evaluated implementation assumes a power-of-two modulation order, a configured search grid, and candidate symbol rates and center frequencies; it therefore is not fully blind. For requested symbol rate $R_s$, let
+The streaming-SCA estimates selected points of the spectral correlation function (SCF) for square-root-raised-cosine (SRRC) pulse-shaped quadrature amplitude modulation (QAM) waveforms. The evaluated implementation assumes a power-of-two modulation order, a configured search grid, and candidate symbol rates and center frequencies; it therefore is not fully blind. For requested symbol rate $R_s$, let
 \begin{equation*}
 v=\operatorname{round}\!\left(\frac{R_s N}{f_s}\right)
 \end{equation*}
-be its zero-based Goertzel/DFT bin, and let $f_{c,k}$ be the $k$th configured physical center-frequency candidate. In zero-based sample notation, the archived estimator is
+be its zero-based Goertzel/discrete Fourier transform (DFT) bin, and let $f_{c,k}$ be the $k$th configured downconversion-frequency parameter in hertz. In zero-based sample notation, the archived estimator is
 \begin{equation}\label{eq:sca}
 \widehat{S}_{X}^{v}[k]
 =\frac{1}{N}\sum_{n=0}^{N-1}
 \left|\left(X[n]e^{+j2\pi f_{c,k}n/f_s}\right)\ast h[n]\right|^{2}
 e^{-j2\pi vn/N}.
 \end{equation}
-Here, $n$ is the integer sample index, $N$ is the number of samples used for one estimate, $f_s$ is sample rate, $\ast$ denotes convolution, and $h=[1/2,1/2]$ is the two-tap low-pass filter. The positive channelizer sign matches the archived transmitter's negative carrier convention. The one-based Goertzel call uses bin $v+1$, while $k$ indexes the configured center-frequency list. The quantity $\widehat{S}_{X}^{v}[k]$ is one estimated SCF coefficient~\cite{gormley-21}. Equation~\eqref{eq:sca} corrects the 2021 formula, which omitted frequency normalization and conflated a candidate-list index with physical center frequency.
+Here, $n$ is the integer sample index, $N$ is the number of samples used for one estimate, $f_s$ is sample rate, $\ast$ denotes convolution, and $h=[1/2,1/2]$ is the two-tap low-pass filter. The transmitter uses a negative carrier exponential and the receiver uses the opposite sign, so $f_{c,k}$ is not necessarily the signed spectral location under the standard Fourier convention. The one-based Goertzel call uses bin $v+1$, while $k$ indexes the configured center-frequency list. The quantity $\widehat{S}_{X}^{v}[k]$ is one estimated SCF coefficient~\cite{gormley-21}. Equation~\eqref{eq:sca} corrects the 2021 formula, which omitted frequency normalization and conflated a candidate-list index with a frequency parameter.
 
 The spectrum-sensor design searches and structures these SCF estimates. A scheduling algorithm manages requested symbol-rate candidates. Each request is processed by a streaming-SCA instance, then evaluated with the binary test
 \begin{equation}\label{eq:sca_test}
@@ -99,7 +99,7 @@ The spectrum-sensor design searches and structures these SCF estimates. A schedu
 \end{equation}
 The scalar $\beta$ sets the operating tradeoff between the symbol-rate detection proportion $P_d$ and the false-alarm proportion $P_{fa}$~\cite{gormley-21}. Valid results are stored for a prospective real-time spectrum-management algorithm.
 
-The 2021 study generated a receiver operating characteristic (ROC) curve for the reported two-signal configuration in Table~\ref{tab:classifier}. The repository does not contain the raw ROC observations, and its surviving simulation script uses different signal settings, so the numerical curve cannot be independently reproduced from the archived files.
+The 2021 study generated a receiver operating characteristic (ROC) curve for the reported two-signal configuration in Table~\ref{tab:classifier}. Here, $M$ is modulation order, $r$ is the SRRC roll-off factor, and $E_b/N_0$ is the energy-per-bit-to-noise-density ratio. The repository does not contain the raw ROC observations, and its surviving simulation script uses different signal settings, so the numerical curve cannot be independently reproduced from the archived files.
 
 \begin{table}[!t]
 \caption{Reported Two-Signal ROC Configuration}
@@ -132,7 +132,7 @@ J=P_d+(1-P_{fa})-1=P_d-P_{fa}.
 The archived script correctly maximizes $P_d-P_{fa}$ after averaging repeated false-alarm values, but it then uses that averaged-array index directly on the original $\beta$ array. Consequently, the reported $\beta=1.23\times10^{-4}$ is not reliably linked to the red point and is retained below only as the design value reported in 2021, not as a verified optimum. Maximizing $J$ also gives equal weight to sensitivity and specificity; it does not uniquely minimize false alarms.
 
 \section{Digital Design}
-This section describes the digital-design additions proposed for autonomous spectrum sensing. A separately retained, mixed-date archive contains substantial RTL, behavioral traces, and a February 2022 hardware-manager capture. It is not an exact, reproducible 2021 revision: components name different target devices, and no complete top-level build, constraints, implementation reports, or power measurements were retained. The archive documents development activity but does not validate hardware performance.
+This section describes additions proposed for field-programmable gate array (FPGA) implementation of autonomous spectrum sensing. A separately retained, mixed-date archive contains substantial register-transfer-level (RTL) source, behavioral traces, and a February 2022 hardware-manager capture. It is not an exact, reproducible 2021 revision: components name different target devices, and no complete top-level build, constraints, full-sensor implementation reports, or power measurements were retained. The archive documents development activity but does not validate hardware performance.
 
 \subsection{Threshold}
 The threshold module receives in-phase and quadrature samples from an analog-to-digital converter. As shown in Fig.~\ref{fig:threshold}, samples are serially magnitude-squared, accumulated, right-shifted, and squared. The 2021 paper reported $\beta$ as fixed before synthesis; the later retained top-level RTL instead exposes it as a runtime input.
@@ -145,7 +145,7 @@ The threshold module receives in-phase and quadrature samples from an analog-to-
 \end{figure}
 
 \subsection{Center-Frequency Detector}
-The 2021 block description placed the binary test in the center-frequency detector (CFD). In the later retained RTL, the threshold module computes the right-hand side of \eqref{eq:sca_test}, and a symbol-rate preprocessor applies the comparison before candidates reach the CFD. The CFD itself has no threshold input: for each candidate $v$, it sweeps center-frequency FCWs at the configured step size and returns the largest statistic $\ell=|\widehat{S}_{X}^{v}[k]|^2$ with its $k$. Figure~\ref{fig:cfd} therefore represents the published, earlier topology rather than the later snapshot.
+The 2021 block description placed the binary test in the center-frequency detector~(CFD). In the later retained RTL, the threshold module produces a quantized fixed-point threshold from accumulated sample power and a runtime $\beta$, and a symbol-rate preprocessor applies the comparison before candidates reach the CFD. The CFD itself has no threshold input: for each candidate $v$, it sweeps frequency-control words (FCWs) representing center-frequency candidates at the configured step size and returns the largest statistic $\ell=|\widehat{S}_{X}^{v}[k]|^2$ with the FCW corresponding to $f_{c,k}$. Figure~\ref{fig:cfd} therefore represents the published, earlier topology rather than the later snapshot.
 
 \begin{figure}[!t]
 \centering
@@ -155,7 +155,7 @@ The 2021 block description placed the binary test in the center-frequency detect
 \end{figure}
 
 \subsection{Spectrum Sensor}
-The published spectrum-sensor design stores requested $v$ values in an input FIFO and assigns them to available CFD instances. Historical simulation imagery retains the corresponding FIFO and scheduler signals, but their source is absent. The later snapshot instead feeds candidates directly to a 2022 priority-based distributor; its top-level flow-control process is commented out, and its result commutator relies on staggered CFD latency to avoid simultaneous outputs. Lossless arbitration was not demonstrably verified. Parallel result FIFOs store $(v,k,\ell)$ tuples for a prospective spectrum-management process. Figure~\ref{fig:sca} illustrates the intended, earlier design.
+The published spectrum-sensor design stores requested $v$ values in an input first-in, first-out (FIFO) buffer and assigns them to available CFD instances. Historical simulation imagery retains the corresponding FIFO and scheduler signals, but their source is absent. The later snapshot instead feeds candidates directly to a 2022 priority-based distributor; its top-level flow-control process is commented out, and its result commutator relies on staggered CFD latency to avoid simultaneous outputs. Lossless arbitration was not demonstrably verified. Parallel result FIFOs store the symbol-rate FCW, selected center-frequency FCW, and peak statistic for a prospective spectrum-management process. Figure~\ref{fig:sca} illustrates the intended, earlier design.
 
 \begin{figure}[!t]
 \centering
@@ -165,7 +165,7 @@ The published spectrum-sensor design stores requested $v$ values in an input FIF
 \end{figure}
 
 \section{Results}
-The archived study averaged 300 trials for each scenario in Table~\ref{tab:performance}. The table preserves the published point estimates, but their labels require two qualifications. First, the scoring code tests symbol-rate membership only; it does not test whether the selected center frequency is correct. Thus, $P_d$ is the detected fraction of true symbol-rate candidates and $P_{fa}$ is the false-positive fraction of unoccupied symbol-rate candidates, rather than a whole-system probability. Second, the transmitter peak-normalizes each waveform and calls the noise routine without measuring its average input power; it also adds noise independently to each signal before summing them. The listed $E_b/N_0$ values are therefore nominal routine inputs, not verified received ratios. New quantitative conclusions require a corrected, seeded rerun.
+The 2021 paper reports averages over 300 trials for each scenario in Table~\ref{tab:performance}. The table preserves the published point estimates, but their labels require two qualifications. First, the scoring code tests symbol-rate membership only; it does not test whether the selected center frequency is correct. Thus, $P_d$ is the detected fraction of true symbol-rate candidates and $P_{fa}$ is the false-positive fraction of unoccupied symbol-rate candidates, rather than a whole-system probability. Under that formula, the reported four-decimal $P_{fa}$ values are incompatible with the 900 candidate-trials implied by the surviving five-candidate script; fitting all nine rounded values requires at least 30 unoccupied candidates per run. This further shows that the table-producing configuration is absent, but it does not identify the exact grid. Second, the retained transmitter script peak-normalizes each waveform and calls the noise routine without measuring its average input power; it also adds noise independently to each signal before summing them. The listed $E_b/N_0$ values are therefore nominal routine inputs, not verified received ratios. New quantitative conclusions require a corrected, seeded rerun.
 
 \subsection{Characterization}
 \begin{table}[!t]
@@ -193,12 +193,12 @@ Baseline & 15.0 & 0.35 & 1.0    & 0.0013 \\
 
 At the reported design value $\beta=1.23\times10^{-4}$, the symbol-rate detection proportion was 0.89 in the lowest nominal $E_b/N_0$ scenario and at least 0.9967 in the other eight scenarios. The reported false-alarm proportion ranged from 0.0013 to 0.1213. Because the threshold-to-ROC mapping is not recoverable and no confidence intervals or independent validation set were retained, these values neither verify an optimal threshold nor confirm ROC accuracy.
 
-The archived scoring code explicitly counts a result as detected when its symbol-rate candidate is correct, even if its center-frequency candidate is inaccurate. A retained plotting script maps the five 300-record center-frequency files to nominal $E_b/N_0$ values of 12, 9, 6, 3, and 0~dB. It counts exact stored FCW values in nominal 0.05-MHz bins and divides by 300, so the ordinate is per-bin relative frequency, not probability density. Literal zeros are not one of those FCW bins: one is omitted at 3~dB and 33 at 0~dB, leaving plotted masses of 0.9967 and 0.89. Their equality to the corresponding $P_d$ values strongly suggests that zero records denote misses, although the generator and acceptance rule are absent. The evidence supports increased dispersion among returned estimates as nominal $E_b/N_0$ decreases, but not calibrated center-frequency accuracy.
+The archived scoring code explicitly counts a result as detected when its symbol-rate candidate is correct, even if its center-frequency candidate is inaccurate. A retained plotting script maps the five 300-record center-frequency files to nominal $E_b/N_0$ values of 12, 9, 6, 3, and 0~dB. The published plot counted exact stored FCW values in nominal 0.05-MHz bins and divided by 300, so its ordinate was per-bin relative frequency, not probability density. Literal zeros are not one of those FCW bins: one was omitted at 3~dB and 33 at 0~dB, leaving plotted masses of 0.9967 and 0.89. Their equality to the corresponding $P_d$ values strongly suggests that zero records denote misses, although no retained generator or driver linked to these five files defines the acceptance rule. Figure~\ref{fig:histo} now preserves the full 300-record rows by placing those unmatched zeros in a separate category. The evidence supports increased dispersion among returned estimates as nominal $E_b/N_0$ decreases, but not calibrated center-frequency accuracy.
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{images/EbN0_fc_histo.png}
-\caption{Archived 300-record center-frequency rows for nominal $E_b/N_0=12,9,6,3,$ and $0$~dB. Height is per-bin relative frequency, not density. The plot omits one zero-valued record at 3~dB and 33 at 0~dB; dispersion among returned estimates increases as nominal $E_b/N_0$ falls.}
+\caption{Archived 300-record center-frequency rows for nominal $E_b/N_0$ values of 12, 9, 6, 3, and 0~dB. Marker area represents the trial proportion in each displayed bin. The final category preserves literal FCW zero records that do not map to the script's displayed frequency grid; it contains one record at 3~dB and 33 at 0~dB.}
 \label{fig:histo}
 \end{figure}
 
@@ -222,14 +222,16 @@ The published output example (Fig.~\ref{fig:timing_out}) states that arriving $A
 \end{figure}
 
 \section{Conclusion}
-This work proposed an FPGA-oriented spectrum-sensor architecture built around the streaming-SCA, with candidate scheduling, threshold detection, and result buffering. The archived Monte Carlo outputs characterize symbol-rate detections for simulated co-channel QAM--SRRC signals. Mixed-date RTL and a later hardware-manager capture document subsequent development, while the timing diagrams describe an earlier FIFO topology whose complete source was not retained. These records do not validate center-frequency accuracy, a fully blind search, implementation resource use, timing performance, power, end-to-end FPGA operation, or operation over a general RF channel.
+This work proposed an FPGA-oriented spectrum-sensor architecture built around the streaming-SCA, with candidate scheduling, threshold detection, and result buffering. The reported Monte Carlo results characterize symbol-rate detections for simulated, spectrally overlapping QAM--SRRC signals. Mixed-date RTL and a later hardware-manager capture document subsequent development, while the timing diagrams describe an earlier FIFO topology whose complete source was not retained. These records do not validate center-frequency accuracy, a fully blind search, implementation resource use, timing performance, power, end-to-end FPGA operation, or operation over a general radio-frequency channel.
 
 Future work should first restore an executable and versioned simulation, normalize average signal power, add channel noise once after combining signals, define a candidate grid independently of ground truth, retain random seeds and raw observations, and rerun the ROC analysis with a correct mapping from each averaged operating point to $\beta$. Symbol-rate and center-frequency errors should then be scored separately with uncertainty intervals. Only after that recalibration should the detector be assessed on additional signal classes. Hardware claims require an exact, buildable RTL revision with its constraints and device configuration, implementation resource and timing reports, and power measurements.
 
 \section*{Acknowledgment}
 The authors thank Erica K. Henrichsen for the graphic designs illustrated in this paper.
 
+% Balance the final columns after the deferred output-timing figure.
 \newpage
+\vspace*{2.25in}
 \bibliographystyle{main/IEEEtran}
 \bibliography{main/IEEEabrv,main/ccaaw_2021}
 
